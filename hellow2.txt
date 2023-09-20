@@ -1,0 +1,185 @@
+int stateD;            
+int stateF;            
+int adata = 0;           
+long number;
+
+void setup(){
+pinMode(4,INPUT_PULLUP);//シグナル　ｉｎ
+pinMode(2,INPUT_PULLUP);//ハードリセット
+pinMode(8,OUTPUT);//バックライト
+pinMode(3,OUTPUT);//L1
+pinMode(5,OUTPUT);//L2
+pinMode(6,OUTPUT);//LH
+pinMode(9,OUTPUT);//R1
+pinMode(10,OUTPUT);//R2
+pinMode(11,OUTPUT);//RH
+randomSeed(analogRead(5));
+attachInterrupt(0,software_reset,RISING);
+}
+
+
+
+void software_reset() {
+
+analogWrite(3,0);
+analogWrite(5,0);
+analogWrite(6,0);
+analogWrite(9,0);
+analogWrite(10,0);
+analogWrite(11,0);
+
+digitalWrite(8,LOW);
+  
+  asm volatile ("  jmp 0");  
+} 
+
+
+
+void loop(){
+stateD = digitalRead(4);                // read
+
+   if ( stateD == 1 && stateF == 0 ) // plus count
+     adata++;
+
+     stateF = stateD;
+delay(10);
+
+if(adata>=1){  
+number = random(1,65537);
+}
+if( adata >= 1){
+adata -= 1;
+}
+ 
+long moti =number;
+
+if(moti ==0){
+analogWrite(9,0); 
+analogWrite(10,0);
+digitalWrite(8,LOW);
+}
+else if((moti >= 1)&&(moti <= 65537)){
+LED_0();               //●LED_?();   ？の数字だけ半角で変えるとLED点灯プログラムが変わります。
+digitalWrite(8,HIGH);  //初期設定では０　通常点滅です。0-3。
+}
+}
+
+void LED_0() {
+analogWrite(3,200); //通常点滅
+delay(90);
+analogWrite(5,200);
+delay(90);
+analogWrite(6,200);
+delay(90);
+analogWrite(9,200);
+delay(90);
+analogWrite(10,200);
+delay(90);
+analogWrite(11,200);
+delay(90);
+analogWrite(3,0);
+delay(90);
+analogWrite(5,0);
+delay(90);
+analogWrite(6,0);
+delay(90);
+analogWrite(9,0);
+delay(90);
+analogWrite(10,0);
+delay(90);
+analogWrite(11,0);
+delay(90);
+}
+
+
+void LED_1() {
+//しびれ点滅
+
+analogWrite(3,250);
+analogWrite(5,250);
+analogWrite(6,250);
+analogWrite(9,250);
+analogWrite(10,250);
+analogWrite(11,250);
+delay(40);
+
+
+analogWrite(3,100); 
+analogWrite(5,100);
+analogWrite(6,100);
+analogWrite(9,100);
+analogWrite(10,100);
+analogWrite(11,100);
+delay(40);
+
+analogWrite(3,0);
+analogWrite(5,0);
+analogWrite(6,0);
+analogWrite(9,0);
+analogWrite(10,0);
+analogWrite(11,0);
+delay(12);
+
+}
+
+
+
+void LED_2() {
+//スロー点滅　　ダブル
+for(int x=0; x<200; x++){ //suro tenmetu
+analogWrite(3,x);
+delay(1);
+analogWrite(5,x);
+delay(1);
+analogWrite(6,x);
+delay(1);
+analogWrite(9,x);
+delay(1);
+analogWrite(10,x);
+delay(1);
+analogWrite(11,x);
+delay(1);
+}
+
+for(int x=200; x>=0; x--){
+analogWrite(3,x);
+delay(1);
+analogWrite(5,x);
+delay(1);
+analogWrite(6,x);
+delay(1);
+analogWrite(9,x);
+delay(1);
+analogWrite(10,x);
+delay(1);
+analogWrite(11,x);
+delay(1);
+
+}
+}
+
+
+
+
+void LED_3() {
+//スピードアップ＆ダウン
+for(int x=0; x<20; x++){
+analogWrite(3,200);
+analogWrite(5,200);
+analogWrite(6,200);
+analogWrite(9,0);
+analogWrite(10,0);
+analogWrite(11,0);
+delay(8*x);
+analogWrite(3,0);
+analogWrite(5,0);
+analogWrite(6,0);
+analogWrite(9,200);
+analogWrite(10,200);
+analogWrite(11,200);
+delay(7*x);
+
+
+}
+}
+
